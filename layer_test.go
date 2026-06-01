@@ -14,7 +14,7 @@ func TestNewLayer(t *testing.T) {
 	assert.Equal(t, 3, len(layer.B))
 }
 
-func TestCompute(t *testing.T) {
+func TestForward(t *testing.T) {
 	layer := NewLayer(2, 3, Identity)
 
 	inputs := []float32{1.0, 2.0}
@@ -24,7 +24,7 @@ func TestCompute(t *testing.T) {
 
 	outputs := make([]float32, 3)
 
-	layer.Compute(outputs, inputs)
+	layer.Forward(outputs, inputs)
 
 	assert.InEpsilonSlice(t, []float32{5.0, 5.0, 5.0}, outputs, 0.00001)
 }

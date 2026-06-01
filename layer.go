@@ -26,14 +26,15 @@ func NewLayer(inputs, outputs int, activation ActivationFunction) *Layer {
 	return layer
 }
 
-func (layer *Layer) Compute(dst, src []float32) {
+func (layer *Layer) Forward(dst, src []float32) {
 	if len(src) != layer.Inputs || len(dst) != layer.Outputs {
 		s := fmt.Sprintf("src or dst do not match layer shape: %v != %v or %v != %v", len(src), layer.Inputs, len(dst), layer.Outputs)
 		panic(s)
 	}
 
 	for i := 0; i < layer.Outputs; i++ {
-		weights := layer.W[layer.Inputs*i : layer.Inputs*i+layer.Inputs]
+		base := layer.Inputs * i
+		weights := layer.W[base : base+layer.Inputs]
 		output := dotProduct(src, weights)
 		dst[i] = layer.Activation(output + layer.B[i])
 	}

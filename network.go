@@ -36,7 +36,7 @@ func (n *Network) lastLayer() *Layer {
 	return n.Layers[lastLayerNb]
 }
 
-func (n *Network) Compute(dst, src []float32) {
+func (n *Network) Forward(dst, src []float32) {
 	if len(dst) != n.lastLayer().Outputs {
 		s := fmt.Sprintf("Shape of output does not match: Expected %v but got %v\n", n.lastLayer().Outputs, len(dst))
 		panic(s)
@@ -52,11 +52,11 @@ func (n *Network) Compute(dst, src []float32) {
 	for x := range len(n.Layers) - 1 {
 		layer := n.Layers[x]
 		outputs = make([]float32, layer.Outputs)
-		fmt.Printf("Layer[%v].Compute(%+v, %+v)\n", x, input, outputs)
-		layer.Compute(outputs, input)
+		fmt.Printf("Layer[%v].Forward(%+v, %+v)\n", x, input, outputs)
+		layer.Forward(outputs, input)
 
 		input = outputs
 	}
 
-	n.lastLayer().Compute(dst, outputs)
+	n.lastLayer().Forward(dst, outputs)
 }

@@ -38,9 +38,8 @@ func TestNewNetwork(t *testing.T) {
 
 	inputs := []float32{1.0, 2.0}
 	outputs := make([]float32, 2)
-	nn.Compute(outputs, inputs)
+	nn.Forward(outputs, inputs)
 
 	fmt.Printf("Outputs: %v\n", outputs)
 	assert.InEpsilonSlice(t, []float32{41.0, 123.0}, outputs, 0.00001)
 }
-
