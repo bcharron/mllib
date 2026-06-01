@@ -24,6 +24,13 @@ func NewNetwork(layerSize ...int) *Network {
 	return net
 }
 
+func (n *Network) LoadWeights(filename string) {
+
+}
+
+func (n *Network) SaveWeights(filename string) {
+}
+
 func (n *Network) lastLayer() *Layer {
 	lastLayerNb := len(n.Layers) - 1
 	return n.Layers[lastLayerNb]
