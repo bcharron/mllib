@@ -7,7 +7,7 @@ import (
 )
 
 func TestNewNetwork(t *testing.T) {
-	nn := NewNetwork(2, 3, 2)
+	nn := NewNetwork(Identity, 2, 3, 2)
 
 	assert.Equal(t, 2, len(nn.Layers))
 	assert.Equal(t, 2, nn.Layers[0].Inputs)
@@ -17,11 +17,11 @@ func TestNewNetwork(t *testing.T) {
 
 	for _, layer := range nn.Layers {
 		for x := range len(layer.W) {
-			layer.W[x] = float32(x)
+			layer.W[x] = float64(x)
 		}
 
 		for x := range len(layer.B) {
-			layer.B[x] = float32(x)
+			layer.B[x] = float64(x)
 		}
 	}
 
@@ -36,10 +36,10 @@ func TestNewNetwork(t *testing.T) {
 	// 1: 2*0 + 9*1 + 16*2 + 0 = 41
 	// 2: 2*3 + 9*4 + 16*5 + 1 = 123
 
-	inputs := []float32{1.0, 2.0}
-	outputs := make([]float32, 2)
+	inputs := []float64{1.0, 2.0}
+	outputs := make([]float64, 2)
 	nn.Forward(outputs, inputs)
 
 	fmt.Printf("Outputs: %v\n", outputs)
-	assert.InEpsilonSlice(t, []float32{41.0, 123.0}, outputs, 0.00001)
+	assert.InEpsilonSlice(t, []float64{41.0, 123.0}, outputs, 0.00001)
 }

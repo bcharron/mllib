@@ -17,14 +17,14 @@ func TestNewLayer(t *testing.T) {
 func TestForward(t *testing.T) {
 	layer := NewLayer(2, 3, Identity)
 
-	inputs := []float32{1.0, 2.0}
+	inputs := []float64{1.0, 2.0}
 
-	layer.W = []float32{1.0, 2.0, 1.0, 2.0, 1.0, 2.0}
-	layer.B = []float32{0.0, 0.0, 0.0}
+	layer.W = []float64{1.0, 2.0, 1.0, 2.0, 1.0, 2.0}
+	layer.B = []float64{0.0, 0.0, 0.0}
 
-	outputs := make([]float32, 3)
+	outputs := make([]float64, 3)
 
 	layer.Forward(outputs, inputs)
 
-	assert.InEpsilonSlice(t, []float32{5.0, 5.0, 5.0}, outputs, 0.00001)
+	assert.InEpsilonSlice(t, []float64{5.0, 5.0, 5.0}, outputs, 0.00001)
 }

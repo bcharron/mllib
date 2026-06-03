@@ -8,7 +8,7 @@ type Network struct {
 	Layers []*Layer
 }
 
-func NewNetwork(layerSize ...int) *Network {
+func NewNetwork(activation Activation, layerSize ...int) *Network {
 	net := &Network{
 		Layers: make([]*Layer, len(layerSize)-1),
 	}
@@ -16,7 +16,7 @@ func NewNetwork(layerSize ...int) *Network {
 	for idx, size := range layerSize[:len(layerSize)-1] {
 		next := layerSize[idx+1]
 		fmt.Printf("Layer[%d] = %v -> %v\n", idx, size, next)
-		net.Layers[idx] = NewLayer(size, next, Identity)
+		net.Layers[idx] = NewLayer(size, next, activation)
 	}
 
 	fmt.Printf("Layers: %+v\n", net.Layers)
@@ -36,7 +36,7 @@ func (n *Network) lastLayer() *Layer {
 	return n.Layers[lastLayerNb]
 }
 
-func (n *Network) Forward(dst, src []float32) {
+func (n *Network) Forward(dst, src []float64) {
 	if len(dst) != n.lastLayer().Outputs {
 		s := fmt.Sprintf("Shape of output does not match: Expected %v but got %v\n", n.lastLayer().Outputs, len(dst))
 		panic(s)
@@ -47,11 +47,11 @@ func (n *Network) Forward(dst, src []float32) {
 	}
 
 	input := src
-	var outputs []float32
+	var outputs []float64
 
 	for x := range len(n.Layers) - 1 {
 		layer := n.Layers[x]
-		outputs = make([]float32, layer.Outputs)
+		outputs = make([]float64, layer.Outputs)
 		fmt.Printf("Layer[%v].Forward(%+v, %+v)\n", x, input, outputs)
 		layer.Forward(outputs, input)
 
@@ -59,4 +59,7 @@ func (n *Network) Forward(dst, src []float32) {
 	}
 
 	n.lastLayer().Forward(dst, outputs)
+}
+
+func (n *Network) Backward(dst, src []float64) {
 }
