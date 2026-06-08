@@ -24,6 +24,12 @@ func NewNetwork(activation Activation, layerSize ...int) *Network {
 	return net
 }
 
+func (n *Network) RandomizeWeights() {
+	for _, layer := range n.Layers {
+		layer.RandomizeWeights()
+	}
+}
+
 func (n *Network) LoadWeights(filename string) {
 
 }

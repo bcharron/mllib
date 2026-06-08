@@ -40,6 +40,12 @@ func (layer *Layer) Forward(dst, src []float64) {
 	}
 }
 
+func (layer *Layer) RandomizeWeights() {
+	for x := 0; x < len(layer.W); x++ {
+		layer.W[x] = randRange(-1, 1)
+	}
+}
+
 func (layer *Layer) weightAtIdx(inputIdx, outputIdx int) float64 {
 	return layer.W[layer.Inputs*outputIdx+inputIdx]
 }

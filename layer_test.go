@@ -1,6 +1,7 @@
 package mllib
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -27,4 +28,24 @@ func TestForward(t *testing.T) {
 	layer.Forward(outputs, inputs)
 
 	assert.InEpsilonSlice(t, []float64{5.0, 5.0, 5.0}, outputs, 0.00001)
+}
+
+func TestRandomize(t *testing.T) {
+	layer := NewLayer(3, 3, Identity)
+	allZeroes := make([]float64, len(layer.W))
+
+	// Newly initialized should all be zeroes
+	assert.ElementsMatch(t, allZeroes, layer.W)
+
+	// Randomized should no longer be zero
+	layer.RandomizeWeights()
+	assert.NotElementsMatch(t, layer.W, allZeroes)
+
+	old := make([]float64, len(layer.W))
+	copy(old, layer.W)
+
+	// Array re-randomized should be different from previous
+	layer.RandomizeWeights()
+	assert.NotElementsMatch(t, layer.W, old)
+	fmt.Printf("Old: %+v\nNew: %+v\n", old, layer.W)
 }
