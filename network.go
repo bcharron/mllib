@@ -13,9 +13,17 @@ func NewNetwork(activation Activation, layerSize ...int) *Network {
 		Layers: make([]*Layer, len(layerSize)-1),
 	}
 
+	lastElementIdx := len(net.Layers) - 1
+
 	for idx, size := range layerSize[:len(layerSize)-1] {
 		next := layerSize[idx+1]
 		fmt.Printf("Layer[%d] = %v -> %v\n", idx, size, next)
+
+		if idx == lastElementIdx {
+			fmt.Printf("Layer %d activation is Identity\n", idx)
+			activation = Identity
+		}
+
 		net.Layers[idx] = NewLayer(size, next, activation)
 	}
 
@@ -67,5 +75,23 @@ func (n *Network) Forward(dst, src []float64) {
 	n.lastLayer().Forward(dst, outputs)
 }
 
-func (n *Network) Backward(dst, src []float64) {
+func (n *Network) Backward(dst, expected []float64) {
+	// WIP
+	for idx := len(n.Layers) - 1; idx > 0; idx-- {
+		layer := n.Layers[idx]
+
+		loss := make([]float64, layer.Outputs)
+
+		for x := 0; x < layer.Outputs; x++ {
+			err := layer.cache[x] - expected[x]
+			mse := err * err
+			loss[x] = mse
+		}
+	}
+}
+
+func (n *Network) Mutate(probability, rate float64) {
+	for idx, layer := range n.Layers {
+		layer.Mutate(probability, rate)
+	}
 }

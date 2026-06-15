@@ -12,11 +12,14 @@ type Activation interface {
 var (
 	Identity = identity{}
 	Tanh     = tanh{}
+	Relu     = relu{}
 )
 
 type identity struct{}
 
 type tanh struct{}
+
+type relu struct{}
 
 func (identity) Apply(x float64) float64 {
 	return x
@@ -31,6 +34,17 @@ func (tanh) Apply(x float64) float64 {
 }
 
 func (tanh) Derivative(y float64) float64 {
-	// return 1.0 - math.Pow(math.Tanh(x), 2)
 	return 1.0 - (y * y)
+}
+
+func (relu) Apply(x float64) float64 {
+	return math.Max(0, x)
+}
+
+func (relu) Derivative(x float64) float64 {
+	if x < 0 {
+		return 0
+	} else {
+		return 1
+	}
 }

@@ -2,6 +2,7 @@ package mllib
 
 import (
 	"fmt"
+	"math/rand"
 )
 
 type ActivationFunction func(float64) float64
@@ -12,6 +13,7 @@ type Layer struct {
 	W          []float64
 	B          []float64
 	Activation Activation
+	cache      []float64
 }
 
 func NewLayer(inputs, outputs int, activation Activation) *Layer {
@@ -20,6 +22,7 @@ func NewLayer(inputs, outputs int, activation Activation) *Layer {
 		Outputs:    outputs,
 		W:          make([]float64, inputs*outputs),
 		B:          make([]float64, outputs),
+		cache:      make([]float64, inputs*outputs),
 		Activation: activation,
 	}
 
@@ -38,11 +41,23 @@ func (layer *Layer) Forward(dst, src []float64) {
 		output := dotProduct(src, weights)
 		dst[i] = layer.Activation.Apply(output + layer.B[i])
 	}
+
+	copy(layer.cache, dst)
 }
 
 func (layer *Layer) RandomizeWeights() {
 	for x := 0; x < len(layer.W); x++ {
 		layer.W[x] = randRange(-1, 1)
+	}
+}
+
+func (layer *Layer) Mutate(probability, rate float64) {
+	for x := 0; x < len(layer.W); x++ {
+		if rand.Float64() > probability {
+			newValue := randRange(-1, 1)
+			fmt.Printf("Mutating %0.2f -> %0.2f\n", layer.W[x], newValue)
+			layer.W[x] = newValue
+		}
 	}
 }
 
